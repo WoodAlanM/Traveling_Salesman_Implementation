@@ -47,6 +47,12 @@ def runMainProgram():
             boolean_in_program = False
 
 
+def travelAlgo(distance_rows):
+    truck1 = Truck(8, 0)
+    truck2 = Truck(8, 0)
+
+    #STOPPING HERE FOR THE EVENING
+
 # Takes rows from the package csv and removes the first 8 rows
 # This gets the meaningful data. Then the data is added to a dictionary
 # where the package id is the key, and the package information
