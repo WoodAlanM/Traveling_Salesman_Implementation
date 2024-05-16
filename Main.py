@@ -2,6 +2,7 @@ from HashTable import HashTable
 from Truck import Truck
 from CSV import getrows
 from AdjacencyMatrix import getAdjacencyMatrix
+from collections import Counter
 
 HUB = "4001 South 700 East"
 
@@ -102,18 +103,24 @@ def travelAlgo(truck):
         truck_addresses.append(value[0])
         key_address_dict[key] = value[0]
 
+    addressCounter = Counter(truck_addresses)
+
+    location_count_dict = {}
+    for address in truck_addresses:
+        location_count_dict[address] = addressCounter[address]
+
     # Set starting conditions
     start_location = HUB
-    shortest_distance_destination = [0, 0.0, '']
+    shortest_distance_destination = [0, 0.0, '', 0]
     ordered_addresses = []
     ordered_route_list = []
+
+    total_packages = len(truck_keys)
 
     # Goes through each delivery in the truck
     # will have to make an adjustment for a truck with less
     # than 16 packages in it.
-    for delivery in range(0, 16):
-        if delivery == 10:
-            pass
+    for delivery in range(0, total_packages):
         # This variable keeps track of the row index for
         # cross-referencing start vs next locations
         row_number = 0
@@ -136,13 +143,17 @@ def travelAlgo(truck):
                             # and continue until all the addresses have been traversed
                             # this will guarantee the selection of the shortest travel distance
                             if float(shortest_distance_destination[1]) == 0.0:
-                                shortest_distance_destination[1] = row[row_number]
                                 shortest_distance_destination[0] = associated_truck_key
+                                shortest_distance_destination[1] = row[row_number]
                                 shortest_distance_destination[2] = row[0]
+                                shortest_distance_destination[3] = location_count_dict[
+                                    str(shortest_distance_destination[2])]
                             elif float(shortest_distance_destination[1]) > float(row[row_number]):
-                                shortest_distance_destination[1] = row[row_number]
                                 shortest_distance_destination[0] = associated_truck_key
+                                shortest_distance_destination[1] = row[row_number]
                                 shortest_distance_destination[2] = row[0]
+                                shortest_distance_destination[3] = location_count_dict[
+                                    str(shortest_distance_destination[2])]
                 # Precautionary check for the shortest distance
                 # location to ensure it is not added twice.  As well
                 # as the list of ordered addresses.  These may not be necessary
@@ -151,16 +162,19 @@ def travelAlgo(truck):
                 if shortest_distance_destination[2] not in ordered_addresses:
                     ordered_addresses.append(shortest_distance_destination[2])
                     start_location = shortest_distance_destination[2]
-                    shortest_distance_destination = [0, 0.0, '']
-                    # print(ordered_route_list)
-                    # print(str(start_location))
+                    shortest_distance_destination = [0, 0.0, '', 0]
                 break
             else:
                 row_number = row_number + 1
         continue
 
-    truck.send_ordered_list(ordered_route_list)
-    # print(len(ordered_route_list))
+    cleaned_ordered_route_list = []
+
+    for address in ordered_route_list:
+        if not int(address[0]) == 0:
+            cleaned_ordered_route_list.append(address)
+
+    truck.send_ordered_list(cleaned_ordered_route_list)
 
 # Takes rows from the package csv and removes the first 8 rows
 # This gets the meaningful data. Then the data is added to a dictionary
