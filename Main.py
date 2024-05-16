@@ -108,41 +108,59 @@ def travelAlgo(truck):
     ordered_addresses = []
     ordered_route_list = []
 
-
-    print(adjMatrix)
+    # Goes through each delivery in the truck
+    # will have to make an adjustment for a truck with less
+    # than 16 packages in it.
     for delivery in range(0, 16):
-        # Maybe move this number thing
+        if delivery == 10:
+            pass
+        # This variable keeps track of the row index for
+        # cross-referencing start vs next locations
         row_number = 0
+        # Enter the first row of the adjacency matrix and traverse horizontally
+        # looking for the start location
         for item in adjMatrix[0]:
             if str(item) == start_location:
+                # Access every row of the adjacency matrix and traverse the first
+                # index to find the next location
                 for row in adjMatrix:
+                    # If the address is the delivery address of one of the trucks packages
                     if str(row[0]) in key_address_dict.values():
+                        # If the delivery address has not already been entered into the list
                         if str(row[0]) not in ordered_addresses:
-                            print('got here')
+                            # find the index of the address, to find the key (package id)
                             index_of_address = truck_addresses.index(str(row[0]))
                             associated_truck_key = truck_keys[index_of_address]
-                            if shortest_distance_destination[1] == 0.0:
+                            # If the value for shortest distance variable has not been set
+                            # then set it to the corresponding next location distance
+                            # and continue until all the addresses have been traversed
+                            # this will guarantee the selection of the shortest travel distance
+                            if float(shortest_distance_destination[1]) == 0.0:
                                 shortest_distance_destination[1] = row[row_number]
                                 shortest_distance_destination[0] = associated_truck_key
                                 shortest_distance_destination[2] = row[0]
-                            elif shortest_distance_destination[1] > row[row_number]:
+                            elif float(shortest_distance_destination[1]) > float(row[row_number]):
                                 shortest_distance_destination[1] = row[row_number]
                                 shortest_distance_destination[0] = associated_truck_key
                                 shortest_distance_destination[2] = row[0]
+                # Precautionary check for the shortest distance
+                # location to ensure it is not added twice.  As well
+                # as the list of ordered addresses.  These may not be necessary
                 if shortest_distance_destination not in ordered_route_list:
                     ordered_route_list.append(shortest_distance_destination)
                 if shortest_distance_destination[2] not in ordered_addresses:
                     ordered_addresses.append(shortest_distance_destination[2])
                     start_location = shortest_distance_destination[2]
                     shortest_distance_destination = [0, 0.0, '']
-                    print(ordered_route_list)
-                    print(str(start_location))
+                    # print(ordered_route_list)
+                    # print(str(start_location))
                 break
             else:
                 row_number = row_number + 1
         continue
 
-    print(len(ordered_route_list))
+    truck.send_ordered_list(ordered_route_list)
+    # print(len(ordered_route_list))
 
 # Takes rows from the package csv and removes the first 8 rows
 # This gets the meaningful data. Then the data is added to a dictionary

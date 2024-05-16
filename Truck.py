@@ -3,9 +3,9 @@ import math
 
 class Truck:
     def __init__(self, departure_hour, departure_minute):
-        self.miles_driven = 0
+        self.miles_driven = 0.0
         self.package_dict = {}
-        self.route_ordered_dict = {}
+        self.route_ordered_dict = []
         self.update_list = []
 
         today = datetime.date.today()
@@ -15,7 +15,20 @@ class Truck:
         self.package_dict[package_id] = package_data
 
     def add_miles(self, miles):
-        self.miles_driven = self.miles_driven + miles
+        self.miles_driven = self.miles_driven + float(miles)
+
+
+    def send_ordered_list(self, ordered_list):
+        self.route_ordered_dict = ordered_list
+        print(ordered_list)
+        for delivery in ordered_list:
+            print(delivery)
+            # Set all package statuses to "EN ROUTE"
+            package_data = self.package_dict[delivery[0]]
+            package_data[-1] = "EN ROUTE"
+            self.complete_delivery(delivery[0], delivery[1])
+        print(self.update_list)
+
 
     def complete_delivery(self, package_id, distance_traveled):
         package_data = self.package_dict[package_id]
@@ -31,7 +44,7 @@ class Truck:
         update.append(delivery_time)
         update.append(delivered_address)
         update.append(self.package_dict)
-
+        self.update_list.append((update))
 
 
 
