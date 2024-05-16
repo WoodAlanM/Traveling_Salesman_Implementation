@@ -5,6 +5,10 @@ from AdjacencyMatrix import getAdjacencyMatrix
 
 HUB = "4001 South 700 East"
 
+TRUCK1_LIST = [1, 2, 4, 5, 7, 8, 14, 15, 19, 20, 29, 30, 31, 34, 37, 40]
+TRUCK2_LIST = [3, 10, 12, 17, 18, 21, 22, 23, 24, 25, 26, 27, 33, 36, 38, 39]
+TRUCK3_LIST = [6, 9, 11, 13, 16, 28, 32, 35]
+
 def runMainProgram():
     # Uses getrows function from CSV.py to retrieve the data
     # from the csv files.
@@ -12,13 +16,19 @@ def runMainProgram():
     package_rows = getrows("WGUPS Package File (CSV).csv")
     adjMatrix = getAdjacencyMatrix("WGUPS Distance Table (CSV).csv")
 
+    truck1 = Truck(8, 0)
+    truck2 = Truck(8, 0)
+
     # Isolates the package data and inserts it into
     # the hash table.
     package_dict = getPackageDict(package_rows)
     for key, data in package_dict.items():
         ht.insert(key, data)
 
-    loadTrucks(package_dict, adjMatrix)
+    loadTruck(truck1, package_dict, TRUCK1_LIST)
+
+    # Test algorithm
+    travelAlgo(truck1)
 
     # Begin user interface
     print("********************************************")
@@ -51,21 +61,11 @@ def runMainProgram():
         elif selection == 4:
             boolean_in_program = False
 
-
-def loadTrucks(package_dict):
-    truck1 = Truck(8, 0)
-    truck2 = Truck(8, 0)
+def loadTruck(truck, package_dict, list_for_truck):
 
     # Manually load trucks
-    truck1_list = [1, 2, 4, 5, 7, 8, 14, 15, 19, 20, 29, 30, 31, 34, 37, 40]
-    truck2_list = [3, 10, 12, 17, 18, 21, 22, 23, 24, 25, 26, 27, 33, 36, 38, 39]
-    truck3_list = [6, 9, 11, 13, 16, 28, 32, 35]
-
-    for package in truck1_list:
-        truck1.add_package(package, package_dict[package])
-
-    for package in truck2_list:
-        truck2.add_package(package, package_dict[package])
+    for package in list_for_truck:
+        truck.add_package(package, package_dict[package])
 
     # early_package_dict = {}
     # for key, data in package_dict.items():
@@ -93,33 +93,56 @@ def loadTrucks(package_dict):
 def travelAlgo(truck):
     adjMatrix = getAdjacencyMatrix('WGUPS Distance Table (CSV).csv')
 
-    distance_dict = {}
-
     truck_package_dict = truck.package_dict
-
-    start_location = HUB
-    next_location = ''
-    distance_dict = {}
-
+    truck_keys = []
+    truck_addresses = []
+    key_address_dict = {}
     for key, value in truck_package_dict.items():
-        # Get address of package
-        next_location = value[0]
-        next_location_distance = 0.0
-        for row in adjMatrix:
-            if not row[0] == '':
-                if row[0] == next_location:
-                    for x in range(1, len(adjMatrix[0]) - 2):
-                        if adjMatrix[0][x] == start_location:
-                    #         Matching start location stopped here
+        truck_keys.append(key)
+        truck_addresses.append(value[0])
+        key_address_dict[key] = value[0]
 
-                    break
-                else:
-                    pass
-        distance_dict[key] = value
+    # Set starting conditions
+    start_location = HUB
+    shortest_distance_destination = [0, 0.0, '']
+    ordered_addresses = []
+    ordered_route_list = []
 
 
+    print(adjMatrix)
+    for delivery in range(0, 16):
+        # Maybe move this number thing
+        row_number = 0
+        for item in adjMatrix[0]:
+            if str(item) == start_location:
+                for row in adjMatrix:
+                    if str(row[0]) in key_address_dict.values():
+                        if str(row[0]) not in ordered_addresses:
+                            print('got here')
+                            index_of_address = truck_addresses.index(str(row[0]))
+                            associated_truck_key = truck_keys[index_of_address]
+                            if shortest_distance_destination[1] == 0.0:
+                                shortest_distance_destination[1] = row[row_number]
+                                shortest_distance_destination[0] = associated_truck_key
+                                shortest_distance_destination[2] = row[0]
+                            elif shortest_distance_destination[1] > row[row_number]:
+                                shortest_distance_destination[1] = row[row_number]
+                                shortest_distance_destination[0] = associated_truck_key
+                                shortest_distance_destination[2] = row[0]
+                if shortest_distance_destination not in ordered_route_list:
+                    ordered_route_list.append(shortest_distance_destination)
+                if shortest_distance_destination[2] not in ordered_addresses:
+                    ordered_addresses.append(shortest_distance_destination[2])
+                    start_location = shortest_distance_destination[2]
+                    shortest_distance_destination = [0, 0.0, '']
+                    print(ordered_route_list)
+                    print(str(start_location))
+                break
+            else:
+                row_number = row_number + 1
+        continue
 
-    #STOPPING HERE FOR THE EVENING
+    print(len(ordered_route_list))
 
 # Takes rows from the package csv and removes the first 8 rows
 # This gets the meaningful data. Then the data is added to a dictionary

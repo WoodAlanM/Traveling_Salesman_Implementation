@@ -5,8 +5,11 @@ class Truck:
     def __init__(self, departure_hour, departure_minute):
         self.miles_driven = 0
         self.package_dict = {}
+        self.route_ordered_dict = {}
         self.update_list = []
-        self.departure_time = datetime.datetime(0,0,0, departure_hour, departure_minute, 0)
+
+        today = datetime.date.today()
+        self.departure_time = datetime.datetime(today.year,today.month,today.day, departure_hour, departure_minute, 0)
 
     def add_package(self, package_id, package_data):
         self.package_dict[package_id] = package_data

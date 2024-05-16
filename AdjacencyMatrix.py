@@ -44,6 +44,19 @@ def getAdjacencyMatrix(file_path):
     for row in distance_needed_rows:
         distance_matrix.append(row[2:])
 
+    column_number = 1
+    row_number = 0
+    for row in distance_matrix:
+        if not float(row[0]) == 0.0:
+            for value in row:
+                if not float(value) == 0.0:
+                    distance_matrix[row_number][column_number] = value
+                    row_number = row_number + 1
+                else:
+                    column_number = column_number + 1
+                    row_number = 0
+                    break
+
     distance_matrix.insert(0, horizontal_address_list)
 
     count = 0
