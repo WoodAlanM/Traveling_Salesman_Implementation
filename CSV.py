@@ -1,5 +1,6 @@
 import csv
 
+# Pretty simple.  This class handles CSV retrieval
 def getrows(path_to_csv):
     rows = []
     file = open(path_to_csv)

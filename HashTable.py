@@ -1,13 +1,18 @@
 # Alan Wood
 # HashTable class
 
+
+# This implementation is very much like the one in the videos for the class
 class HashTable:
 
+    # Upon hashtable initialization a default capacity is set
+    # and a table(list) is created and populated with lists
     def __init__(self, capacity=10):
         self.table = []
         for i in range(capacity):
             self.table.append([])
 
+    # Method for inserting a value into the hash table
     def insert(self, package_id, data):
         bucket = hash(package_id) % len(self.table)
         bucket_list = self.table[bucket]

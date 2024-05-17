@@ -44,6 +44,10 @@ def getAdjacencyMatrix(file_path):
     for row in distance_needed_rows:
         distance_matrix.append(row[2:])
 
+    # The distance table that was provided only has values in the lower left portion
+    # I found that by populating the empty cells in the upper right portion
+    # that implementing the travel algorithm was easier
+    # This portion of code is responsible for that
     column_number = 1
     row_number = 0
     for row in distance_matrix:
@@ -57,13 +61,17 @@ def getAdjacencyMatrix(file_path):
                     row_number = 0
                     break
 
+    # This places the top line, the address line, as the first element in the distance matrix
     distance_matrix.insert(0, horizontal_address_list)
 
     count = 0
 
+    # This is responsible for filling the first element in each
+    # row of the adjacency matrix with the corresponding address
     for item in distance_matrix:
         if not item[0] == '':
             item.insert(0, vertical_address_list[count])
             count = count + 1
 
     return distance_matrix
+
