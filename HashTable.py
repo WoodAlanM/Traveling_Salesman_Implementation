@@ -24,9 +24,6 @@ class HashTable:
     def search(self, package_id):
         bucket = hash(package_id) % len(self.table)
         bucket_list = self.table[bucket]
-
-        print(bucket_list[0][0])
-
         # If the bucket list contains more than one item
         # search through the items one by one to find a matching
         # package id else check the one item.  If the one item

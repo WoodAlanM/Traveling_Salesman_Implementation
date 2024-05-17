@@ -4,13 +4,14 @@ import math
 MINUTES_PER_MILE = ((1.0/18.0) * 60.0)
 
 class Truck:
-    def __init__(self, departure_hour, departure_minute):
+    def __init__(self, truck_number, departure_hour, departure_minute):
+        self.truck_number = truck_number
         self.miles_driven = 0.0
         self.package_dict = {}
         self.route_ordered_dict = []
         self.update_list = []
         today = datetime.date.today()
-        self.departure_time = datetime.datetime(today.year,today.month,today.day, departure_hour, departure_minute, 0)
+        self.departure_time = datetime.datetime(today.year, today.month, today.day, departure_hour, departure_minute, 0)
 
     def add_package(self, package_id, package_data):
         self.package_dict[package_id] = package_data
@@ -20,9 +21,7 @@ class Truck:
 
 
     def send_ordered_list(self, ordered_list):
-
         # Fix to make the packages say EN ROUTE
-
         self.route_ordered_dict = ordered_list
         for delivery in ordered_list:
             # Set all package statuses to "EN ROUTE"
