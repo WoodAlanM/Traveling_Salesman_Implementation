@@ -1,8 +1,6 @@
 # Alan Wood
 # HashTable class
 
-
-# This implementation is very much like the one in the videos for the class
 class HashTable:
 
     # Upon hashtable initialization a default capacity is set
@@ -17,9 +15,9 @@ class HashTable:
         bucket = hash(package_id) % len(self.table)
         bucket_list = self.table[bucket]
 
-        for kv in bucket_list:
-            if kv[0] == package_id:
-                kv[1] = data
+        for container in bucket_list:
+            if container[0] == package_id:
+                container[1] = data
                 return True
 
         key_value = [package_id, data]
@@ -47,6 +45,6 @@ class HashTable:
         bucket = hash(package_id) % len(self.table)
         bucket_list = self.table[bucket]
 
-        for kv in bucket_list:
-            if kv[0] == package_id:
-                bucket_list.remove([kv[0],kv[1]])
+        for container in bucket_list:
+            if container[0] == package_id:
+                bucket_list.remove([container[0], container[1]])

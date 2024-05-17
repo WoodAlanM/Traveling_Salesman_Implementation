@@ -311,6 +311,12 @@ def travelAlgo(truck):
     # Sends the list to the truck object where it is further handled
     truck.send_ordered_list(cleaned_ordered_route_list)
 
+# This function will take the package ID and return the information associated with it
+def retrievePackageData(packageID):
+    package_data = []
+
+    return package_data
+
 # Takes rows from the package csv and removes the first 8 rows
 # This gets the meaningful data. Then the data is added to a dictionary
 # where the package id is the key, and the package information
