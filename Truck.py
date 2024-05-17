@@ -11,10 +11,11 @@ class Truck:
         self.package_dict = {}
         self.route_ordered_dict = []
         self.update_list = []
+        today = datetime.date.today()
+        self.running_time = datetime.datetime(today.year, today.month, today.day, departure_hour, departure_minute, 0)
         # This is used later to test my algorithm
         # The first value is the delivery number, second is address, third is distance traveled to get there
         self.distance_traveled_data = [[0, 'HUB', 0]]
-        today = datetime.date.today()
         self.departure_time = datetime.datetime(today.year, today.month, today.day, departure_hour, departure_minute, 0)
 
     def add_package(self, package_id, package_data):
@@ -73,9 +74,9 @@ class Truck:
             self.add_miles(distance_traveled)
             # This calculates the time it took to get from one location to another
             # and adds it to departure time, which becomes running time at this point
-            time_change_numeric = (distance_traveled * MINUTES_PER_MILE)
-            running_time = running_time + datetime.timedelta(minutes=time_change_numeric)
-            formatted_time = running_time.strftime("%I:%M %p")
+            time_change_numeric = (float(distance_traveled) * MINUTES_PER_MILE)
+            self.running_time = self.running_time + datetime.timedelta(minutes=time_change_numeric)
+            formatted_time = self.running_time.strftime("%I:%M %p")
             for key, value in multiple_package_dict.items():
                 del self.package_dict[key]
                 update = []
@@ -90,9 +91,9 @@ class Truck:
             self.add_miles(distance_traveled)
             # This calculates the time it took to get from one location to another
             # and adds it to departure time, which becomes running time at this point
-            time_change_numeric = (distance_traveled * MINUTES_PER_MILE)
-            running_time = running_time + datetime.timedelta(minutes=time_change_numeric)
-            formatted_time = running_time.strftime("%I:%M %p")
+            time_change_numeric = (float(distance_traveled) * MINUTES_PER_MILE)
+            self.running_time = self.running_time + datetime.timedelta(minutes=time_change_numeric)
+            formatted_time = self.running_time.strftime("%I:%M %p")
             update = []
             update.append(package_id)
             update.append(formatted_time)
