@@ -1,6 +1,8 @@
 import datetime
 import math
 
+MINUTES_PER_MILE = ((1.0/18.0) * 60.0)
+
 class Truck:
     def __init__(self, departure_hour, departure_minute):
         self.miles_driven = 0.0
@@ -38,13 +40,14 @@ class Truck:
                 if value[0] == address:
                     multiple_package_dict[key] = value
             self.add_miles(distance_traveled)
-            time_change_numeric = math.ceil(self.miles_driven * 0.3)
+            time_change_numeric = math.ceil(self.miles_driven * MINUTES_PER_MILE)
             delivery_time = self.departure_time + datetime.timedelta(minutes=time_change_numeric)
+            formatted_time = delivery_time.strftime("%I:%M %p")
             for key, value in multiple_package_dict.items():
                 del self.package_dict[key]
                 update = []
                 update.append(key)
-                update.append(delivery_time.time())
+                update.append(formatted_time)
                 value[-1] = "DELIVERED"
                 update.append(value)
                 self.update_list.append(update)
@@ -52,14 +55,12 @@ class Truck:
             # For single package deliveries
             del self.package_dict[package_id]
             self.add_miles(distance_traveled)
-            time_change_numeric = math.ceil(self.miles_driven * 0.3)
+            time_change_numeric = math.ceil(self.miles_driven * MINUTES_PER_MILE)
             delivery_time = self.departure_time + datetime.timedelta(minutes=time_change_numeric)
+            formatted_time = delivery_time.strftime("%I:%M %p")
             update = []
             update.append(package_id)
-            update.append(delivery_time.time())
+            update.append(formatted_time)
             package_data[-1] = "DELIVERED"
             update.append(package_data)
             self.update_list.append(update)
-
-        print(self.miles_driven)
-        print(self.package_dict)

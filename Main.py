@@ -59,6 +59,15 @@ def runMainProgram():
                 print(f"Status:        {package_info[1][5]}\n")
             else:
                 print(f"Package number {package_id} was not found.\n")
+        elif selection == 2:
+            print("\n")
+            print(f"{'ID:': <5}{'Delivered Time:': <20}{'Address:': <25}{'City:': <20}"
+                      f"{'Zipcode:': <10}{'Deadline:': <12}{'Weight': <5}{'Status:': <12}")
+            for detail in truck1.update_list:
+                print(f"{detail[0]: <5}{detail[1]: <20}{detail[2][0]: <25}{detail[2][1]: <20}"
+                      f"{detail[2][2]: <10}{detail[2][3]: <12}{detail[2][4]: <5}{detail[2][5]: <12}")
+                # Left off here.  Begin the output phase.
+            print("\n")
         elif selection == 4:
             boolean_in_program = False
 
