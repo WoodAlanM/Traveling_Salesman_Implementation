@@ -207,9 +207,11 @@ def loadTruck(truck, package_dict, list_for_truck):
 def timeWindowRetrieveList(truck, time_end):
     update_list = truck.update_list
 
+    reuse_update_list = update_list
+
     sort_format = ("%I:%M %p")
     # Sort the trucks update list by delivery time
-    sorted_update_data = sorted(update_list, key=lambda detail_list:
+    sorted_update_data = sorted(reuse_update_list, key=lambda detail_list:
                                 datetime.strptime(detail_list[1], sort_format))
 
     # If a delivery has not occurred, update status and delivery time
@@ -217,6 +219,8 @@ def timeWindowRetrieveList(truck, time_end):
         if update[1] >= time_end:
             update[2][-1] = "EN ROUTE"
             update[1] = 'EN ROUTE'
+
+    reuse_update_list.clear()
 
     return sorted_update_data
 
@@ -314,6 +318,10 @@ def travelAlgo(truck):
 # This function will take the package ID and return the information associated with it
 def retrievePackageData(packageID):
     package_data = []
+
+    # First search for the packaged in the hash table
+    package = ht.search(packageID)
+    print(package)
 
     return package_data
 
