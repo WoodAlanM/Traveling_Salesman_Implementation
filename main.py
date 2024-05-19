@@ -42,6 +42,11 @@ def runMainProgram():
     loadTruck(truck2, package_dict, TRUCK2_LIST)
     loadTruck(truck3, package_dict, TRUCK3_LIST)
 
+    # Fix package number 9 address.
+    truck3.package_dict[9][0] = '410 S State St'
+    truck3.package_dict[9][2] = '84111'
+    print(truck3.package_dict[9])
+
     truck_list.append(truck1)
     truck_list.append(truck2)
     truck_list.append(truck3)
